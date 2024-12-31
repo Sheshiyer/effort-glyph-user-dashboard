@@ -8,17 +8,22 @@ Effort Glyph transforms work achievements into digital collectibles by integrati
 
 ## Tech Stack
 
-- **Frontend**: React 18 + TypeScript + Vite
-- **Styling**: TailwindCSS
+- **Frontend**: 
+  - React 18 + TypeScript + Vite
+  - TailwindCSS for styling
+  - Lucide React for icons
 - **Blockchain**: 
-  - Moralis SDK for Web3 integration
-  - Polygon Network for NFT minting
+  - Ethers.js for Web3 interactions
+  - OpenZeppelin contracts
+  - Hardhat development environment
+  - Polygon Network for deployment
 - **Backend**: 
   - Supabase for data storage
   - Clockify API for time tracking
 - **Development Tools**:
   - ESLint for code quality
   - Zod for type validation
+  - TypeScript for type safety
   - Environment variables for configuration
 
 ## Features Implemented
@@ -35,10 +40,11 @@ Effort Glyph transforms work achievements into digital collectibles by integrati
   - Claim status
 
 ### Blockchain Integration
-- Moralis service setup for:
-  - NFT minting capabilities
-  - Wallet NFT fetching
-  - IPFS metadata storage
+- Smart contract implementation:
+  - ERC721-based NFT contract
+  - Achievement tracking system
+  - Secure minting functionality
+  - Comprehensive test suite
 
 ### Time Tracking
 - Clockify integration with:
@@ -58,33 +64,58 @@ Effort Glyph transforms work achievements into digital collectibles by integrati
    ```bash
    npm install
    ```
-3. Configure environment variables:
+3. Configure environment variables by copying `.env.example` to `.env`:
    ```env
-   VITE_MORALIS_API_KEY=your_moralis_key
+   # Network Configuration
+   POLYGON_RPC_URL=https://polygon-rpc.com    # Polygon Mainnet
+   PRIVATE_KEY=your_wallet_private_key_here
+   POLYGONSCAN_API_KEY=your_polygonscan_api_key_here
+   
+   # After deployment
+   CONTRACT_ADDRESS=your_deployed_contract_address
    ```
-4. Run development server:
+
+4. Available commands:
    ```bash
+   # Development server
    npm run dev
-   ```
-5. For employee sync:
-   ```bash
+   
+   # Build for production
+   npm run build
+   
+   # Preview production build
+   npm run preview
+   
+   # Run tests
+   npm run test
+   
+   # Deploy contract
+   npm run deploy           # Local network
+   npm run deploy:polygon   # Polygon network
+   
+   # Sync employees data
    npm run sync-employees
+   
+   # Lint code
+   npm run lint
    ```
 
-## TODOs
+## Smart Contract Development
 
-### Smart Contract Development
+### Completed
 ✅ NFT Contract Implementation:
 - Implemented ERC721 contract with achievement tracking
 - Added required hours management for achievements
 - Implemented secure minting functionality
 - Added comprehensive test suite
 
-Next Steps:
-- [ ] Deploy contract to Polygon Mumbai testnet
-- [ ] Verify contract on Polygonscan
-- [ ] Add contract address to environment variables
-- [ ] Update frontend integration
+✅ Contract Deployment:
+- Deployed contract to Polygon mainnet
+- Verified contract on Polygonscan
+- Added contract address to environment variables
+- Updated frontend integration
+
+## Upcoming Features
 
 ### Wallet Integration
 - [ ] Complete ConnectWallet component implementation
@@ -142,10 +173,12 @@ Next Steps:
 - [ ] Add image optimization
 - [ ] Implement code splitting
 
-## License
-
-[Add License Information]
-
 ## Contributing
 
-[Add Contributing Guidelines]
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

@@ -1,104 +1,48 @@
-import React, { useState } from 'react';
-import { Award } from 'lucide-react';
-import { useEffortGlyph } from '../../hooks/useEffortGlyph';
-import { useWallet } from '../../hooks/useWallet';
+import React from 'react';
+import placeholder from 'placeholder.js';
 
 interface NFTCardProps {
   title: string;
   hours: number;
   project: string;
-  imageUrl: string;
   isClaimed: boolean;
-  metadataUri: string;
-  onClaimSuccess?: () => void;
+  imageUrl?: string;
 }
 
-export function NFTCard({ 
-  title, 
-  hours, 
-  project, 
-  imageUrl, 
-  isClaimed, 
-  metadataUri,
-  onClaimSuccess 
-}: NFTCardProps) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  
-  const { provider } = useWallet();
-  const { mintAchievement } = useEffortGlyph(provider);
-
-  const handleClaim = async () => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const signer = await provider?.getSigner();
-      if (!signer) {
-        throw new Error('Please connect your wallet');
-      }
-
-      const address = await signer.getAddress();
-      
-      // Mint the NFT and wait for confirmation
-      await mintAchievement(
-        address,
-        title,
-        metadataUri
-      );
-      
-      // Call success callback if provided
-      onClaimSuccess?.();
-    } catch (err) {
-      console.error('Error claiming NFT:', err);
-      setError(err instanceof Error ? err.message : 'Failed to claim NFT');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+export function NFTCard({ title, hours, project, isClaimed, imageUrl }: NFTCardProps) {
+  // Generate placeholder image URL
+  const placeholderImage = placeholder.getData({
+    width: 400,
+    height: 300,
+    text: title,
+    bgColor: '#f3f4f6',
+    textColor: '#6b7280',
+    fontSize: 20
+  });
 
   return (
-    <div className="bg-white rounded-xl overflow-hidden border border-gray-200">
-      <img
-        src={imageUrl}
-        alt={title}
-        className="w-full h-48 object-cover"
+    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+      <img 
+        src={imageUrl || placeholderImage} 
+        alt={title} 
+        className="w-full h-48 object-cover rounded-lg mb-4"
+        onError={(e) => {
+          // Fallback to placeholder if image fails to load
+          (e.target as HTMLImageElement).src = placeholderImage;
+        }}
       />
-      <div className="p-4">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="font-semibold text-lg">{title}</h3>
-          <Award className="text-blue-600" size={20} />
-        </div>
-        <div className="space-y-2">
-          <p className="text-sm text-gray-600">
-            <span className="font-medium">Hours:</span> {hours}
-          </p>
-          <p className="text-sm text-gray-600">
-            <span className="font-medium">Project:</span> {project}
-          </p>
-        </div>
-        {error && (
-          <p className="mt-2 text-sm text-red-600">
-            {error}
-          </p>
-        )}
-        {!isClaimed ? (
-          <button
-            onClick={handleClaim}
-            disabled={isLoading}
-            className={`mt-4 w-full py-2 px-4 rounded-lg transition-colors ${
-              isLoading
-                ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-blue-600 hover:bg-blue-700 text-white'
-            }`}
-          >
-            {isLoading ? 'Claiming...' : 'Claim NFT'}
-          </button>
-        ) : (
-          <div className="mt-4 text-center py-2 px-4 bg-gray-100 rounded-lg text-gray-600">
-            Claimed
-          </div>
-        )}
+      <h2 className="text-xl font-bold mb-2">{title}</h2>
+      <div className="space-y-2 text-sm">
+        <p><span className="font-medium">Hours:</span> {hours}</p>
+        <p><span className="font-medium">Project:</span> {project}</p>
+        <p>
+          <span className="font-medium">Status:</span> 
+          <span className={`ml-2 px-2 py-1 rounded-full text-xs ${
+            isClaimed ? 'bg-green-100 text-green-600' : 'bg-yellow-100 text-yellow-600'
+          }`}>
+            {isClaimed ? 'Claimed' : 'Pending'}
+          </span>
+        </p>
       </div>
     </div>
   );

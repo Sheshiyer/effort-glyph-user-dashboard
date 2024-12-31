@@ -1,43 +1,32 @@
 import React from 'react';
-import { LayoutDashboard, Award, Clock, FileText, Wallet, Menu } from 'lucide-react';
-import { useState } from 'react';
-
-const menuItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', href: '#' },
-  { icon: Award, label: 'NFTs', href: '#' },
-  { icon: Clock, label: 'Work Metrics', href: '#' },
-  { icon: Award, label: 'Achievements', href: '#' },
-  { icon: FileText, label: 'Reference Letters', href: '#' },
-];
+import { Link } from 'react-router-dom';
+import { Home, Award, BarChart2, FileText, User } from 'lucide-react';
 
 export function Sidebar() {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const navigation = [
+    { name: 'Dashboard', href: '/', icon: Home },
+    { name: 'NFTs', href: '/nfts', icon: Award },
+    { name: 'Work Metrics', href: '/work-metrics', icon: BarChart2 },
+    { name: 'Achievements', href: '/achievements', icon: User },
+    { name: 'Reference Letters', href: '/reference-letters', icon: FileText }
+  ];
 
   return (
-    <div className={`bg-white border-r border-gray-200 h-screen transition-all duration-300 ${
-      isCollapsed ? 'w-16' : 'w-64'
-    }`}>
-      <div className="p-4 border-b border-gray-200 flex justify-between items-center">
-        {!isCollapsed && <span className="text-xl font-bold text-blue-600">EffortGlyph</span>}
-        <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className="p-2 hover:bg-gray-100 rounded-lg"
-        >
-          <Menu size={20} />
-        </button>
+    <div className="w-64 bg-white border-r border-gray-100">
+      <div className="p-6">
+        <nav className="space-y-1">
+          {navigation.map((item) => (
+            <Link
+              key={item.name}
+              to={item.href}
+              className="flex items-center px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors"
+            >
+              <item.icon className="w-5 h-5 mr-3" />
+              <span className="text-sm font-medium">{item.name}</span>
+            </Link>
+          ))}
+        </nav>
       </div>
-      <nav className="p-4">
-        {menuItems.map((item) => (
-          <a
-            key={item.label}
-            href={item.href}
-            className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 transition-colors mb-1"
-          >
-            <item.icon size={20} className="text-gray-500" />
-            {!isCollapsed && <span>{item.label}</span>}
-          </a>
-        ))}
-      </nav>
     </div>
   );
 }
